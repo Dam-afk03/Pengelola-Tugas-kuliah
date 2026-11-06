@@ -1,60 +1,93 @@
-import './style.css'
-import heroImg from './assets/hero.png'
-import typescriptLogo from './assets/typescript.svg'
-import viteLogo from './assets/vite.svg'
-import { setupCounter } from './counter.ts'
+import "./style.css";
+import type { Tugas, Prioritas } from "./types";
+import { muatTugas, simpan } from "./storage";
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-<section id="center">
-  <div class="hero">
-    <img src="${heroImg}" class="base" width="170" height="179">
-    <img src="${typescriptLogo}" class="framework" alt="TypeScript logo"/>
-    <img src="${viteLogo}" class="vite" alt="Vite logo" />
-  </div>
-  <div>
-    <h1>Get started</h1>
-    <p>Edit <code>src/main.ts</code> and save to test <code>HMR</code></p>
-  </div>
-  <button id="counter" type="button" class="counter"></button>
-</section>
+const namaApp: string = import.meta.env.VITE_APP_NAME;
+const versiApp: string = import.meta.env.VITE_APP_VERSION;
+document.getElementById("judul-app")!.textContent = namaApp;
+document.getElementById("versi-app")!.textContent = `v${versiApp}`;
 
-<div class="ticks"></div>
+let tugas: Tugas[] = muatTugas();                             // array
+let sedangEdit = false;                                       // boolean
 
-<section id="next-steps">
-  <div id="docs">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#documentation-icon"></use></svg>
-    <h2>Documentation</h2>
-    <p>Your questions, answered</p>
-    <ul>
-      <li>
-        <a href="https://vite.dev/" target="_blank">
-          <img class="logo" src="${viteLogo}" alt="" />
-          Explore Vite
-        </a>
-      </li>
-      <li>
-        <a href="https://www.typescriptlang.org" target="_blank">
-          <img class="button-icon" src="${typescriptLogo}" alt="">
-          Learn more
-        </a>
-      </li>
-    </ul>
-  </div>
-  <div id="social">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#social-icon"></use></svg>
-    <h2>Connect with us</h2>
-    <p>Join the Vite community</p>
-    <ul>
-      <li><a href="https://github.com/vitejs/vite" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#github-icon"></use></svg>GitHub</a></li>
-      <li><a href="https://chat.vite.dev/" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#discord-icon"></use></svg>Discord</a></li>
-      <li><a href="https://x.com/vite_js" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#x-icon"></use></svg>X.com</a></li>
-      <li><a href="https://bsky.app/profile/vite.dev" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#bluesky-icon"></use></svg>Bluesky</a></li>
-    </ul>
-  </div>
-</section>
+const form = document.getElementById("form-tugas") as HTMLFormElement;
+const daftar = document.getElementById("daftar") as HTMLUListElement;
+const el = <T extends HTMLElement>(id: string) =>
+  document.getElementById(id) as T;
 
-<div class="ticks"></div>
-<section id="spacer"></section>
-`
+function render(): void {
+  daftar.innerHTML = "";
+  tugas.forEach((t) => {
+    const li = document.createElement("li");
+    li.className = t.status === "Selesai" ? "selesai" : "";
+    li.innerHTML = `
+      <div class="info">
+        <strong>${t.judul}</strong>
+        <span>${t.matkul} • ${t.deadline} • ${t.prioritas}</span>
+        <span class="badge ${t.status === "Selesai" ? "ok" : "pending"}">${t.status}</span>
+      </div>
+      <div class="aksi">
+        <button data-aksi="toggle" data-id="${t.id}">✔</button>
+        <button data-aksi="edit" data-id="${t.id}">✏️</button>
+        <button data-aksi="hapus" data-id="${t.id}">🗑</button>
+      </div>`;
+    daftar.appendChild(li);
+  });
+}
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+function resetForm(): void {
+  form.reset();
+  el<HTMLInputElement>("id").value = "";
+  el<HTMLButtonElement>("btn-simpan").textContent = "Tambah";
+  el<HTMLButtonElement>("btn-batal").hidden = true;
+  sedangEdit = false;
+}
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const idLama = el<HTMLInputElement>("id").value;
+  const data = {
+    judul: el<HTMLInputElement>("judul").value.trim(),
+    matkul: el<HTMLInputElement>("matkul").value.trim(),
+    deadline: el<HTMLInputElement>("deadline").value,
+    prioritas: el<HTMLSelectElement>("prioritas").value as Prioritas,
+  };
+  if (sedangEdit) {
+    tugas = tugas.map((t) => (t.id === Number(idLama) ? { ...t, ...data } : t));
+  } else {
+    tugas.push({ id: Date.now(), status: "Belum Selesai", ...data });
+  }
+  simpan<Tugas>(tugas);
+  resetForm();
+  render();
+});
+
+el<HTMLButtonElement>("btn-batal").addEventListener("click", resetForm);
+
+daftar.addEventListener("click", (e) => {
+  const btn = (e.target as HTMLElement).closest("button");
+  if (!btn) return;
+  const id = Number(btn.dataset.id);
+  const t = tugas.find((x) => x.id === id);
+  if (!t) return;
+
+  if (btn.dataset.aksi === "toggle") {
+    t.status = t.status === "Selesai" ? "Belum Selesai" : "Selesai";
+  } else if (btn.dataset.aksi === "hapus") {
+    tugas = tugas.filter((x) => x.id !== id);
+  } else if (btn.dataset.aksi === "edit") {
+    el<HTMLInputElement>("id").value = String(t.id);
+    el<HTMLInputElement>("judul").value = t.judul;
+    el<HTMLInputElement>("matkul").value = t.matkul;
+    el<HTMLInputElement>("deadline").value = t.deadline;
+    el<HTMLSelectElement>("prioritas").value = t.prioritas;
+    el<HTMLButtonElement>("btn-simpan").textContent = "Simpan";
+    el<HTMLButtonElement>("btn-batal").hidden = false;
+    sedangEdit = true;
+    return;
+  }
+  simpan<Tugas>(tugas);
+  render();
+});
+
+render();
