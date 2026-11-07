@@ -216,6 +216,37 @@ select option { color: var(--teks); }
 .hapus-ya { background: var(--merah); color: #fff; }
 .hapus-ya:hover { background: #dc2626; }
 
+/* Bagian penjelasan konsep */
+.penjelasan { margin-top: 1.5rem; }
+.penjelasan .intro { color: var(--redup); font-size: .9rem; margin: -.4rem 0 .9rem; }
+
+/* Accordion */
+details {
+  border: 1.5px solid var(--garis);
+  border-radius: 12px;
+  margin-bottom: .6rem;
+  overflow: hidden;
+}
+details[open] { border-color: var(--utama); }
+summary {
+  cursor: pointer;
+  padding: .8rem 1rem;
+  font-weight: 600;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "＋"; color: var(--utama); }
+details[open] summary::after { content: "－"; }
+details[open] summary { background: #eef2ff; }
+
+/* Isi accordion */
+details ul { display: block; padding: .8rem 1rem .9rem 2rem; list-style: disc; }
+details li { margin-bottom: .45rem; font-size: .92rem; line-height: 1.55; }
+code { background: #f1f5f9; padding: 1px 6px; border-radius: 6px; font-size: .85em; }
+
 @keyframes muncul {
   from { opacity: 0; transform: scale(.92); }
   to { opacity: 1; transform: scale(1); }

@@ -54,6 +54,63 @@
     </div>
 
     <ul id="daftar"></ul>
+
+  <section class="card penjelasan">
+  <h2>Penjelasan Konsep &amp; Teknologi</h2>
+  <p class="intro">Ringkasan teknologi yang dipakai pada aplikasi ini.</p>
+
+  <details open>
+    <summary>Git dan GitHub</summary>
+    <ul>
+      <li><b>Git:</b> sistem version control untuk mencatat riwayat perubahan kode (commit).</li>
+      <li><b>Branch:</b> cabang kerja terpisah untuk mengembangkan fitur tanpa mengganggu branch utama.</li>
+      <li><b>Merge:</b> menggabungkan riwayat commit dari satu branch ke branch lain.</li>
+      <li><b>Merge Conflict:</b> terjadi saat dua branch mengubah baris yang sama, sehingga harus dipilih dan diselesaikan manual.</li>
+      <li><b>Pull Request:</b> permintaan di GitHub untuk meninjau dan menggabungkan branch ke <code>main</code>.</li>
+      <li><b>Push dan Pull:</b> push mengirim commit lokal ke GitHub, pull mengambil perubahan dari GitHub.</li>
+      <li><b>.gitignore:</b> daftar file yang tidak ikut dilacak, misalnya <code>node_modules</code> dan <code>.env</code>.</li>
+    </ul>
+  </details>
+
+  <details>
+    <summary>npm (Node Package Manager)</summary>
+    <ul>
+      <li>Mengelola paket (library) yang dipakai proyek lewat <code>npm install</code>.</li>
+      <li><b>package.json:</b> menyimpan nama proyek, daftar paket, dan <i>scripts</i> (<code>dev</code>, <code>build</code>, <code>preview</code>).</li>
+      <li><b>dependencies:</b> paket yang dibutuhkan aplikasi saat berjalan.</li>
+      <li><b>devDependencies:</b> paket untuk pengembangan saja, seperti Vite dan TypeScript.</li>
+      <li><b>Semantic versioning:</b> <code>MAJOR.MINOR.PATCH</code>. Tanda <code>^</code> boleh update minor/patch, <code>~</code> hanya patch.</li>
+    </ul>
+  </details>
+
+  <details>
+    <summary>TypeScript</summary>
+    <ul>
+      <li>JavaScript dengan sistem tipe, sehingga kesalahan terdeteksi sebelum aplikasi dijalankan.</li>
+      <li>Dipakai di aplikasi ini: tipe primitif (<code>string</code>, <code>number</code>, <code>boolean</code>), array, <code>interface Tugas</code>, <i>type alias</i> dan <i>union type</i> (<code>Status</code>, <code>Prioritas</code>, <code>Filter</code>), serta <i>generics</i> (<code>simpan&lt;T&gt;</code>, <code>muat&lt;T&gt;</code>).</li>
+    </ul>
+  </details>
+
+  <details>
+    <summary>Vite, Compiler, Transpiler &amp; Bundler</summary>
+    <ul>
+      <li><b>Compiler:</b> menerjemahkan kode sumber ke bentuk lain yang bisa dijalankan atau diperiksa. <code>tsc</code> memeriksa tipe TypeScript.</li>
+      <li><b>Transpiler:</b> mengubah kode ke bahasa/versi lain yang levelnya setara, misalnya TypeScript ke JavaScript. Pada Vite tugas ini dikerjakan esbuild.</li>
+      <li><b>Bundler:</b> menggabungkan banyak modul dan aset menjadi sedikit file yang dioptimalkan (minify). Vite memakai Rollup saat <code>npm run build</code>.</li>
+      <li><b>Vite:</b> saat development menyajikan modul ES langsung sehingga sangat cepat (hot reload), dan saat build menghasilkan folder <code>dist</code> yang siap di-deploy.</li>
+    </ul>
+  </details>
+
+  <details>
+    <summary>Environment Variables</summary>
+    <ul>
+      <li>Konfigurasi aplikasi disimpan di file <code>.env</code> dan dibaca lewat <code>import.meta.env</code>.</li>
+      <li>Variabel harus berawalan <code>VITE_</code> agar terbaca, dan nilainya akan terlihat di browser. Karena itu hanya untuk data non-rahasia seperti nama dan versi aplikasi.</li>
+      <li><code>.env</code> tidak diunggah ke GitHub (ada di <code>.gitignore</code>), sedangkan <code>.env.example</code> diunggah sebagai contoh.</li>
+    </ul>
+  </details>
+</section>
+
   </main>
   <div class="modal" id="modal-hapus" hidden>
   <div class="modal-kotak" role="dialog" aria-modal="true" aria-labelledby="modal-judul">
