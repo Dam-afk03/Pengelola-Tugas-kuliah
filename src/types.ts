@@ -1,5 +1,6 @@
 export type Status = "Belum Selesai" | "Selesai";            // type alias + union
 export type Prioritas = "Rendah" | "Sedang" | "Tinggi";
+export type Filter = "semua" | Status;   // union type untuk filter daftar
 
 export interface Tugas {                                      // interface
   id: number;                                                 // number

@@ -4,29 +4,68 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>todo-kuliah</title>
+    <title>Daftar Tugas Kuliah</title>
   </head>
   <body>
-  <main class="container">
-    <header>
-      <h1 id="judul-app"></h1>
-      <small id="versi-app"></small>
+  <main class="app">
+    <header class="hero">
+      <div>
+        <h1 id="judul-app"></h1>
+        <p>Kelola tugas kuliahmu supaya tidak ada yang terlewat</p>
+      </div>
+      <span class="versi" id="versi-app"></span>
     </header>
-    <form id="form-tugas">
-      <input type="hidden" id="id" />
-      <input type="text" id="judul" placeholder="Judul tugas" required />
-      <input type="text" id="matkul" placeholder="Mata kuliah" required />
-      <input type="date" id="deadline" required />
-      <select id="prioritas">
-        <option>Rendah</option>
-        <option selected>Sedang</option>
-        <option>Tinggi</option>
-      </select>
-      <button type="submit" id="btn-simpan">Tambah</button>
-      <button type="button" id="btn-batal" hidden>Batal</button>
+
+    <section class="stats">
+      <div class="stat"><span id="stat-total">0</span><small>Total</small></div>
+      <div class="stat"><span id="stat-belum">0</span><small>Belum Selesai</small></div>
+      <div class="stat"><span id="stat-selesai">0</span><small>Selesai</small></div>
+    </section>
+
+    <div class="progress"><div id="progress-bar"></div></div>
+    <p class="progress-teks" id="progress-teks"></p>
+
+    <form id="form-tugas" class="card">
+      <h2 id="judul-form">Tambah Tugas</h2>
+      <div class="grid">
+        <input type="text" id="judul" placeholder="Judul tugas" required class="penuh" />
+        <input type="text" id="matkul" placeholder="Mata kuliah" required />
+        <input type="date" id="deadline" required />
+        <select id="prioritas" required>
+          <option value=""disabled selected >Pilih prioritas</option>
+          <option>Rendah</option>
+          <option>Sedang</option>
+          <option>Tinggi</option>
+        </select>
+      </div>
+      <div class="tombol">
+        <button type="submit" id="btn-simpan" class="utama">Tambah</button>
+        <button type="button" id="btn-batal" class="sekunder" hidden>Batal</button>
+      </div>
     </form>
+
+    <div class="toolbar">
+      <div class="tabs" id="tabs">
+        <button class="tab aktif" data-filter="semua">Semua</button>
+        <button class="tab" data-filter="Belum Selesai">Belum Selesai</button>
+        <button class="tab" data-filter="Selesai">Selesai</button>
+      </div>
+      <input type="search" id="cari" placeholder="Cari tugas atau mata kuliah..." />
+    </div>
+
     <ul id="daftar"></ul>
   </main>
+  <div class="modal" id="modal-hapus" hidden>
+  <div class="modal-kotak" role="dialog" aria-modal="true" aria-labelledby="modal-judul">
+    <div class="modal-ikon">🗑</div>
+    <h3 id="modal-judul">Hapus tugas?</h3>
+    <p id="modal-teks"></p>
+    <div class="modal-tombol">
+      <button type="button" class="sekunder" id="modal-batal">Batal</button>
+      <button type="button" class="hapus-ya" id="modal-ya">Ya, hapus</button>
+    </div>
+  </div>
+</div>
   <script type="module" src="/src/main.ts"></script>
 </body>
 </html>
